@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: librehealth-ehr-dashboard
+    env: php
+    buildCommand: ""
+    startCommand: "php -S 0.0.0.0:$PORT router.php"
+    plan: free
