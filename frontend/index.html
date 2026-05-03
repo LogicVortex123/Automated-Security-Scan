@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Automated Security Scan Dashboard — LibreHealth EHR Workflows</title>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <p class="eyebrow">LibreHealth EHR Workflows</p>
+      <h1>Automated Security Scan Dashboard</h1>
+      <p class="subtitle">Clean local demo for simulated vulnerability assessment and trend tracking.</p>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel intro-grid" id="howItWorks">
+      <div class="intro-main">
+        <h2>Overview</h2>
+        <p class="lead">
+          Select a healthcare module, run a simulated security scan, and review module posture, latest findings, and historical trend.
+        </p>
+        <p class="callout">
+          This is a demo workflow with predefined patterns. <strong>No file upload is required</strong>.
+        </p>
+      </div>
+      <div class="intro-steps">
+        <h3 class="how-sub">Flow</h3>
+        <ol class="flow-steps compact">
+          <li><span class="step-title">Pick module</span>Patient Registration, Lab Results, Billing, or Appointment Scheduling.</li>
+          <li><span class="step-title">Run scan</span>Calls <code>POST /security-check</code> and stores the result.</li>
+          <li><span class="step-title">Review output</span>Cards + posture + trend from latest and recent scans.</li>
+          <li><span class="step-title">Export report</span>Download printable HTML report for submission.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="panel controls">
+      <label for="module">Healthcare module</label>
+      <div class="row">
+        <select id="module" aria-label="Select EHR module">
+          <option value="Patient Registration">Patient Registration</option>
+          <option value="Lab Results">Lab Results</option>
+          <option value="Billing">Billing</option>
+          <option value="Appointment Scheduling">Appointment Scheduling</option>
+        </select>
+        <button type="button" id="runScan" class="primary">Run Scan</button>
+        <button type="button" id="downloadReport" class="ghost" title="Uses latest stored scan for this module">Download HTML Report</button>
+        <button type="button" id="printDashboard" class="ghost" title="Print this dashboard (save as PDF from the print dialog)">Print view</button>
+      </div>
+      <p id="status" class="status" role="status"></p>
+      <p id="dbBackend" class="hint" style="margin-top:0.35rem"></p>
+      <details class="api-setup">
+        <summary>Connection help (only if API is not reachable)</summary>
+        <p class="hint">
+          <strong>No MongoDB.</strong> This app uses <strong>SQLite</strong> (automatic) or optional MySQL only. Nothing to paste except the PHP server URL below if needed.
+        </p>
+        <p class="hint">
+          <strong>Recommended:</strong> run <code>php -S localhost:8000 router.php</code> in the project folder, then open
+          <strong><code>http://localhost:8000/</code></strong> (or double-click <code>start-server.bat</code>).
+        </p>
+        <p class="hint">
+          If you open this page from <strong>Live Server</strong> or another port, set the PHP server URL (no trailing slash):
+        </p>
+        <div class="row api-base-row">
+          <input type="url" id="apiBaseInput" class="api-base-input" placeholder="http://127.0.0.1:8000" autocomplete="off" aria-label="PHP API base URL"/>
+          <button type="button" id="apiBaseSave" class="ghost">Save &amp; reconnect</button>
+        </div>
+        <p id="apiBaseHint" class="hint"></p>
+      </details>
+    </section>
+
+    <section class="panel posture" id="postureSection" hidden>
+      <h2>Module posture</h2>
+      <div class="posture-card" id="postureCard">
+        <div class="posture-score" id="overallScore">—</div>
+        <div class="posture-label">Overall score (max CVSS in latest run)</div>
+        <div class="posture-severity" id="overallSeverity"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Latest findings <span id="findingsModuleLabel" class="module-chip"></span></h2>
+      <p class="hint" id="findingsHint">Shows the most recent stored scan for this module, or updates immediately after Run Scan.</p>
+      <ul class="legend" aria-label="Severity color key">
+        <li><span class="swatch sev-low"></span> Low</li>
+        <li><span class="swatch sev-medium"></span> Medium</li>
+        <li><span class="swatch sev-high"></span> High / Critical</li>
+      </ul>
+      <div id="cards" class="cards"></div>
+    </section>
+
+    <section class="panel trend-panel">
+      <h2>Recent scan trend</h2>
+      <p class="hint">Last 3–5 completed scans for the selected module (from database).</p>
+      <div class="trend" id="trend"></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Local demonstration only. Findings are predefined mock patterns, not live penetration test results.</p>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

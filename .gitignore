@@ -1,0 +1,4 @@
+backend/data/*.sqlite
+backend/data/*.sqlite-journal
+backend/data/scans.json
+backend/data/scans.json.lock
